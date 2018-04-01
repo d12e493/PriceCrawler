@@ -1,0 +1,5 @@
+{
+    "logDir"  : "/tmp",
+    "logName" : "api",
+    "logLevel" : "info"
+}

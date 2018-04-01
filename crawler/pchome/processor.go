@@ -112,6 +112,8 @@ func productWorker(value interface{}) {
 	products := make([]PchomeProduct, 5)
 
 	jsonParseFromUrl(productlUrl, &products)
+
+	// TODO pass to
 }
 
 func jsonParseFromUrl(url string, value interface{}) {

@@ -2,6 +2,8 @@ package main
 
 import (
 	"product-query/controller"
+	. "product-query/global"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,6 +19,6 @@ func main() {
 		v1.PUT("/", controller.UpdateProduct)
 		v1.DELETE("/:id", controller.DeleteProduct)
 	}
-
-	router.Run()
+	Logger.Info("API server is start")
+	router.Run(":" + strconv.Itoa(Config.Api.Port))
 }
