@@ -1,14 +1,14 @@
 # API Server & Price Crawler Job
 This project consists of RESTful API server and price crawler batch job.
 The architecture of initital design is written on the first day.
-Due to time considerations , I implement the system by the architecture of POC.
+Due to time considerations , I implement the system by the architecture of POC.
 
 ## Contents
 * [Architectue](#Architectue)
 * [How to build](#how-to-build) 
 * [How to run](#how-to-run)
 * [API](#api)
-* [Other Improvement](#other-improvement)
+* [Other Improvement](#other-improvement)
 ---
 ## Architectue
 
