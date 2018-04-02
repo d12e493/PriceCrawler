@@ -1,6 +1,7 @@
 package main
 
 import (
+	. "adn-backend-go/global"
 	"log"
 	"os"
 	job "product-query/job"
@@ -16,18 +17,17 @@ type Job interface {
 	AfterProcess()
 }
 
-// var jobName string = Arguments.JobName
+var jobName string = Arguments.JobName
 
 func init() {
-	// if jobName == "" {
-	// 	panic("no jobname arguments")
-	// }
+	if jobName == "" {
+		panic("no jobname arguments")
+	}
 }
 
 func main() {
 
 	// get job
-	var jobName = "priceCrawler"
 	var job Job = jobMap[jobName]
 
 	if job != nil {
