@@ -14,16 +14,19 @@ Due to time considerations , I implement the system by the architecture of POC.
 
 * Initial design
 1. Crawler and API Server
-![Crawler and API Server](doc/crawler_and_api_server.png)
-
+<br/>
+<img src="doc/crawler_and_api_server.png" alt="Crawler and API Server" width="200">
+</img>
 2. Schema and Worker Pool
-![Schema and Worker Pool](doc/schema_and_worker_pool.png)
-* Implement for POC
+<br/>
+<img src="doc/schema_and_worker_pool.png" alt="Schema and Worker Pool" width="200">
+</img>
+3. Implement for POC
 
 ## How to build
 <pre>sh build.sh</pre>
 ## How to run
-1. run api server
+1. run api server (port:11968)
 <pre>
 sh script/api.sh start|stop|status
 </pre>
@@ -35,3 +38,7 @@ sh script/priceCrawler.sh
 ## API
 
 ## Other Improvement
+1. Error handle and status code for API.
+2. Modulize service and dao for project.
+3. Optimize price crawler and cache some fixed value (like category,item...)
+4. Monitor api server status and get metrics.

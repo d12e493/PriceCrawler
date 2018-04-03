@@ -15,7 +15,8 @@ type DatabaseConfig struct {
 }
 
 type ApiConfig struct {
-	Port int `required:"true"`
+	Host string `required:"true"`
+	Port int    `required:"true"`
 }
 
 type ConfigStruct struct {

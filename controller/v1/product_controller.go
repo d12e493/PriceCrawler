@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"product-query/bo"
 	"product-query/dao"
+	. "product-query/global"
 	"product-query/model"
 	"strconv"
 
@@ -16,7 +16,7 @@ func FindProduct(context *gin.Context) {
 	productId := context.Param("id")
 
 	if productId != "" {
-		fmt.Println("productId : " + productId)
+		Logger.Debug("productId : " + productId)
 		id, err := strconv.ParseInt(productId, 10, 64)
 		if err == nil {
 			var dao = dao.GetMysqlDao()
@@ -36,7 +36,7 @@ func FindProduct(context *gin.Context) {
 
 func CreateProduct(context *gin.Context) {
 
-	var product bo.ProductBO
+	var product bo.CrawlerProductBO
 
 	if err := context.BindJSON(&product); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "bad request parameter"})
@@ -50,7 +50,7 @@ func CreateProduct(context *gin.Context) {
 
 func UpdateProduct(context *gin.Context) {
 
-	var product bo.ProductBO
+	var product bo.CrawlerProductBO
 
 	if err := context.BindJSON(&product); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "bad request parameter"})
@@ -58,18 +58,52 @@ func UpdateProduct(context *gin.Context) {
 
 		if product.ProductId == 0 {
 			context.JSON(http.StatusBadRequest, gin.H{"message": "no product id"})
+		} else {
+			var dao = dao.GetMysqlDao()
+
+			var p = &model.Product{}
+			p.ProductId = product.ProductId
+			dao.First(&p)
+			p.Name = product.Name
+			p.Price = product.Price
+			p.Description = product.Description
+			dao.Save(&p)
+			context.JSON(http.StatusOK, gin.H{"message": "update success"})
 		}
+	}
+}
 
-		var dao = dao.GetMysqlDao()
+// sync crawler product.
+// It'll create / update
+func SyncProduct(context *gin.Context) {
+	var bo bo.CrawlerProductBO
 
-		var p = &model.Product{}
-		p.ProductId = product.ProductId
-		dao.First(&p)
-		p.Name = product.Name
-		p.Price = product.Price
-		p.Description = product.Description
-		dao.Save(&p)
-		context.JSON(http.StatusOK, gin.H{"message": "update success"})
+	if err := context.BindJSON(&bo); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "bad request parameter"})
+	} else {
+
+		if len(bo.Website) == 0 || len(bo.SiteProductId) == 0 {
+			context.JSON(http.StatusBadRequest, gin.H{"message": "no product id"})
+		} else {
+			var dao = dao.GetMysqlDao()
+
+			p := &model.Product{}
+
+			dao.Where("website = ? and site_product_id = ?", bo.Website, bo.SiteProductId).First(p)
+
+			if p.ProductId != 0 {
+				// update
+				dao.Model(&p).Updates(bo)
+
+				context.JSON(http.StatusOK, gin.H{"message": "update success"})
+			} else {
+				// create new one
+				p := model.CreateProduct(&bo)
+				dao.Create(&p)
+
+				context.JSON(http.StatusOK, gin.H{"message": "create success"})
+			}
+		}
 	}
 }
 

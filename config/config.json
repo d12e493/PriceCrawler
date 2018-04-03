@@ -9,6 +9,7 @@
         }
     },
     "api":{
-        "port":11968
+        "host": "localhost",
+        "port": 11968
     }
 }

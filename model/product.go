@@ -2,35 +2,33 @@ package model
 
 import (
 	"product-query/bo"
+
+	"github.com/jinzhu/copier"
 )
 
 type Product struct {
-	ProductId   int `gorm:"primary_key"`
-	Name        string
-	Price       int
-	Description string
+	ProductId     int `gorm:"primary_key"`
+	Name          string
+	Website       string
+	SiteProductId string
+	Link          string
+	Price         int
+	Picture       string
+	Description   string
 }
 
 func (Product) TableName() string {
 	return "product"
 }
 
-func CreateProduct(bo *bo.ProductBO) Product {
+func CreateProduct(bo *bo.CrawlerProductBO) Product {
 	var p = Product{}
-
-	p.ProductId = bo.ProductId
-	p.Name = bo.Name
-	p.Price = bo.Price
-	p.Description = bo.Description
-
+	copier.Copy(&p, bo)
 	return p
 }
 
-func GetProductBO(p *Product) bo.ProductBO {
-	bo := bo.ProductBO{}
-	bo.ProductId = p.ProductId
-	bo.Name = p.Name
-	bo.Price = p.Price
-	bo.Description = p.Description
+func GetProductBO(p *Product) bo.CrawlerProductBO {
+	var bo = bo.CrawlerProductBO{}
+	copier.Copy(&bo, p)
 	return bo
 }

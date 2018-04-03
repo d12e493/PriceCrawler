@@ -30,7 +30,6 @@ func ReloadLogConfig() {
 	if err := configor.Load(&logConfig, configPath); err != nil {
 		panic(err)
 	}
-	//Reload Default Logger
 	reloadDefaultLogger()
 }
 

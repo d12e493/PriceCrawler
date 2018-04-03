@@ -1,9 +1,9 @@
 package main
 
 import (
-	. "adn-backend-go/global"
 	"log"
 	"os"
+	. "product-query/global"
 	job "product-query/job"
 )
 
