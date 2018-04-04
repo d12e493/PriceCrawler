@@ -19,10 +19,6 @@ var Logger *log.Logger = log.New()
 var logConfig logConfigStruct = logConfigStruct{}
 var logFilePointer *os.File = nil
 
-func init() {
-	ReloadLogConfig()
-}
-
 func ReloadLogConfig() {
 
 	var configPath = Arguments.LogConfigPath

@@ -18,7 +18,7 @@ func SendProductInfo(product bo.CrawlerProductBO) {
 	url := fmt.Sprintf("http://%s:%d/v1/product", Config.Api.Host, Config.Api.Port)
 
 	productValue, _ := json.Marshal(product)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(productValue))
+	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(productValue))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}

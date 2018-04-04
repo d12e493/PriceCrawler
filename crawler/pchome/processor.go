@@ -38,6 +38,7 @@ type PchomeProduct struct {
 
 var rgx = regexp.MustCompile(`count\(\d\)`)
 var productUrl string = "https://24h.pchome.com.tw/prod/"
+var productPictureUrl string = "https://a.ecimg.tw"
 var productCountUrl string = "http://ecapi.pchome.com.tw/ecshop/prodapi/v2/store/${subMenu}/prod/count&_callback=jsonp_prodcount"
 var productDetailUrl string = "http://ecapi.pchome.com.tw/ecshop/prodapi/v2/store/${subMenu}/prod&offset=1&limit=${count}&fields=Id,Nick,Pic,Price,Discount,isSpec,Name,isCarrier,isSnapUp,isBigCart&_callback=jsonp_prodlist"
 
@@ -125,7 +126,7 @@ func productWorker(value interface{}) {
 			SiteProductId: product.Id,
 			Link:          productUrl + product.Id,
 			Price:         product.Price.P,
-			Picture:       product.Pic.B,
+			Picture:       productPictureUrl + product.Pic.B,
 		}
 		crawler.SendProductInfo(p)
 	}

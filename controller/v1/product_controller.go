@@ -43,7 +43,7 @@ func CreateProduct(context *gin.Context) {
 	} else {
 		var dao = dao.GetMysqlDao()
 		var p = model.CreateProduct(&product)
-		dao.Create(p)
+		dao.Create(&p)
 		context.JSON(http.StatusOK, gin.H{"message": "create success"})
 	}
 }
