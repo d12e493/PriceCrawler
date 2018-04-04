@@ -43,46 +43,53 @@ var productCountUrl string = "http://ecapi.pchome.com.tw/ecshop/prodapi/v2/store
 var productDetailUrl string = "http://ecapi.pchome.com.tw/ecshop/prodapi/v2/store/${subMenu}/prod&offset=1&limit=${count}&fields=Id,Nick,Pic,Price,Discount,isSpec,Name,isCarrier,isSnapUp,isBigCart&_callback=jsonp_prodlist"
 
 func PageProcess() {
-	// categorys := []string{"daily", "food"}
+	categorys := []string{"daily", "food", "life", "outdoor", "beauty", "vogue", "3c", "cp", "nb", "mobile", "digi", "ce"}
 
-	// var menuUrl string = "http://ecapi.pchome.com.tw/cdn/ecshop/cateapi/v1.5/region&sign=h24%252F${category}&_callback=cb_ecshopCategoryRegion&25374809"
-	// menus := make([]PchomeMenu, 5)
+	var menuUrl string = "http://ecapi.pchome.com.tw/cdn/ecshop/cateapi/v1.5/region&sign=h24%252F${category}&_callback=cb_ecshopCategoryRegion&25374809"
+	menus := make([]PchomeMenu, 5)
 
 	// // get menu
-	// for _, category := range categorys {
-	// 	url := strings.Replace(menuUrl, "${category}", category, -1)
-	// 	tmpMenus := make([]PchomeMenu, 5)
-	// 	jsonParseFromUrl(url, &tmpMenus)
-	// 	menus = append(menus, tmpMenus...)
-	// }
+	for _, category := range categorys {
+		url := strings.Replace(menuUrl, "${category}", category, -1)
+		tmpMenus := make([]PchomeMenu, 5)
+		jsonParseFromUrl(url, &tmpMenus)
+		menus = append(menus, tmpMenus...)
+	}
 	// get submenu
-	// var subMenuUrl string = "http://ecapi.pchome.com.tw/cdn/ecshop/cateapi/v1.5/region/${menu}/menu&_callback=jsonp_nemu&25374802?_callback=jsonp_nemu"
-	// subMenus := make([]PchomeSunMenu, 5)
+	var subMenuUrl string = "http://ecapi.pchome.com.tw/cdn/ecshop/cateapi/v1.5/region/${menu}/menu&_callback=jsonp_nemu&25374802?_callback=jsonp_nemu"
+	subMenus := make([]PchomeSunMenu, 5)
 
-	// for _, menu := range menus {
-	// 	if len(menu.Id) > 0 {
-	// 		url := strings.Replace(subMenuUrl, "${menu}", menu.Id, -1)
-	// 		tmpMenus := make([]PchomeSunMenu, 5)
-	// 		jsonParseFromUrl(url, &tmpMenus)
-	// 		subMenus = append(subMenus, tmpMenus...)
-	// 	}
-	// }
+	for _, menu := range menus {
+		if len(menu.Id) > 0 {
+			url := strings.Replace(subMenuUrl, "${menu}", menu.Id, -1)
+			tmpMenus := make([]PchomeSunMenu, 5)
+			jsonParseFromUrl(url, &tmpMenus)
+			subMenus = append(subMenus, tmpMenus...)
+		}
+	}
 
 	// get product
 	productWorkerService := service.CreateWorkerService(10, productWorker)
 
-	getProductCountAndDetail("DAAG66", productWorkerService)
-
-	// for _, subMenu := range subMenus {
-	// 	getProductCountAndDetail(subMenu.Id, productWorkerService)
-	// 	if len(subMenu.Nodes) > 0 {
-	// 		for _, childSubMenu := range subMenu.Nodes {
-	// 			getProductCountAndDetail(childSubMenu.Id, productWorkerService)
-	// 		}
-	// 	}
-	// }
+	for _, subMenu := range subMenus {
+		getProductCountAndDetail(subMenu.Id, productWorkerService)
+		if len(subMenu.Nodes) > 0 {
+			for _, childSubMenu := range subMenu.Nodes {
+				getProductCountAndDetail(childSubMenu.Id, productWorkerService)
+			}
+		}
+	}
 	productWorkerService.Wait()
 }
+
+// For Test
+// PageProcess
+// func PageProcess() {
+// 	productWorkerService := service.CreateWorkerService(10, productWorker)
+// 	getProductCountAndDetail("DAAG66", productWorkerService)
+// 	productWorkerService.Wait()
+// }
+
 func getProductCountAndDetail(subMenuId string, workService *service.WorkerService) {
 	var url string
 	if len(subMenuId) > 0 {
