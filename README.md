@@ -28,11 +28,16 @@ Due to time considerations , I implement the system by the architecture of POC.
 <pre>
 cd ~/go/src/product-query
 </pre>
-1. develop api
+1. Use govendor download packages
+<pre>
+go get -u github.com/kardianos/govendor
+govendor sync
+</pre>
+2. develop api
 <pre>
 go run main/api.go --config-path config/config.json --log-config-path config/logger.json
 </pre>
-2. develop batch job
+3. develop batch job
 <pre>
 go run main/batch.go --job-name priceCrawler --config-path config/config.json --log-config-path config/logger.json
 </pre>
