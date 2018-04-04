@@ -14,6 +14,18 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+// UnmatchedTomlKeysError errors are returned by the Load function when
+// ErrorOnUnmatchedKeys is set to true and there are unmatched keys in the input
+// toml config file. The string returned by Error() contains the names of the
+// missing keys.
+type UnmatchedTomlKeysError struct {
+	Keys []toml.Key
+}
+
+func (e *UnmatchedTomlKeysError) Error() string {
+	return fmt.Sprintf("There are keys in the config file that do not match any field in the given struct: %v", e.Keys)
+}
+
 func (configor *Configor) getENVPrefix(config interface{}) string {
 	if configor.Config.ENVPrefix == "" {
 		if prefix := os.Getenv("CONFIGOR_ENV_PREFIX"); prefix != "" {
@@ -45,6 +57,10 @@ func getConfigurationFileWithENVPrefix(file, env string) (string, error) {
 func (configor *Configor) getConfigurationFiles(files ...string) []string {
 	var results []string
 
+	if configor.Config.Debug || configor.Config.Verbose {
+		fmt.Printf("Current environment: '%v'\n", configor.GetEnvironment())
+	}
+
 	for i := len(files) - 1; i >= 0; i-- {
 		foundFile := false
 		file := files[i]
@@ -74,7 +90,7 @@ func (configor *Configor) getConfigurationFiles(files ...string) []string {
 	return results
 }
 
-func processFile(config interface{}, file string) error {
+func processFile(config interface{}, file string, errorOnUnmatchedKeys bool) error {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
@@ -82,21 +98,59 @@ func processFile(config interface{}, file string) error {
 
 	switch {
 	case strings.HasSuffix(file, ".yaml") || strings.HasSuffix(file, ".yml"):
+		if errorOnUnmatchedKeys {
+			return yaml.UnmarshalStrict(data, config)
+		}
 		return yaml.Unmarshal(data, config)
 	case strings.HasSuffix(file, ".toml"):
-		return toml.Unmarshal(data, config)
+		return unmarshalToml(data, config, errorOnUnmatchedKeys)
 	case strings.HasSuffix(file, ".json"):
 		return json.Unmarshal(data, config)
 	default:
-		if toml.Unmarshal(data, config) != nil {
-			if json.Unmarshal(data, config) != nil {
-				if yaml.Unmarshal(data, config) != nil {
-					return errors.New("failed to decode config")
-				}
-			}
+
+		if err := unmarshalToml(data, config, errorOnUnmatchedKeys); err == nil {
+			return nil
+		} else if errUnmatchedKeys, ok := err.(*UnmatchedTomlKeysError); ok {
+			return errUnmatchedKeys
 		}
-		return nil
+
+		if json.Unmarshal(data, config) == nil {
+			return nil
+		}
+
+		var yamlError error
+		if errorOnUnmatchedKeys {
+			yamlError = yaml.UnmarshalStrict(data, config)
+		} else {
+			yamlError = yaml.Unmarshal(data, config)
+		}
+
+		if yamlError == nil {
+			return nil
+		} else if yErr, ok := yamlError.(*yaml.TypeError); ok {
+			return yErr
+		}
+
+		return errors.New("failed to decode config")
 	}
+}
+
+// GetStringTomlKeys returns a string array of the names of the keys that are passed in as args
+func GetStringTomlKeys(list []toml.Key) []string {
+	arr := make([]string, len(list))
+
+	for index, key := range list {
+		arr[index] = key.String()
+	}
+	return arr
+}
+
+func unmarshalToml(data []byte, config interface{}, errorOnUnmatchedKeys bool) error {
+	metadata, err := toml.Decode(string(data), config)
+	if err == nil && len(metadata.Undecoded()) > 0 && errorOnUnmatchedKeys {
+		return &UnmatchedTomlKeysError{Keys: metadata.Undecoded()}
+	}
+	return err
 }
 
 func getPrefixForStruct(prefixes []string, fieldStruct *reflect.StructField) []string {
@@ -106,7 +160,7 @@ func getPrefixForStruct(prefixes []string, fieldStruct *reflect.StructField) []s
 	return append(prefixes, fieldStruct.Name)
 }
 
-func processTags(config interface{}, prefixes ...string) error {
+func (configor *Configor) processTags(config interface{}, prefixes ...string) error {
 	configValue := reflect.Indirect(reflect.ValueOf(config))
 	if configValue.Kind() != reflect.Struct {
 		return errors.New("invalid config, should be struct")
@@ -132,9 +186,16 @@ func processTags(config interface{}, prefixes ...string) error {
 			envNames = []string{envName}
 		}
 
+		if configor.Config.Verbose {
+			fmt.Printf("Trying to load struct `%v`'s field `%v` from env %v\n", configType.Name(), fieldStruct.Name, strings.Join(envNames, ", "))
+		}
+
 		// Load From Shell ENV
 		for _, env := range envNames {
 			if value := os.Getenv(env); value != "" {
+				if configor.Config.Debug || configor.Config.Verbose {
+					fmt.Printf("Loading configuration for struct `%v`'s field `%v` from env %v...\n", configType.Name(), fieldStruct.Name, env)
+				}
 				if err := yaml.Unmarshal([]byte(value), field.Addr().Interface()); err != nil {
 					return err
 				}
@@ -159,7 +220,7 @@ func processTags(config interface{}, prefixes ...string) error {
 		}
 
 		if field.Kind() == reflect.Struct {
-			if err := processTags(field.Addr().Interface(), getPrefixForStruct(prefixes, &fieldStruct)...); err != nil {
+			if err := configor.processTags(field.Addr().Interface(), getPrefixForStruct(prefixes, &fieldStruct)...); err != nil {
 				return err
 			}
 		}
@@ -167,7 +228,7 @@ func processTags(config interface{}, prefixes ...string) error {
 		if field.Kind() == reflect.Slice {
 			for i := 0; i < field.Len(); i++ {
 				if reflect.Indirect(field.Index(i)).Kind() == reflect.Struct {
-					if err := processTags(field.Index(i).Addr().Interface(), append(getPrefixForStruct(prefixes, &fieldStruct), fmt.Sprint(i))...); err != nil {
+					if err := configor.processTags(field.Index(i).Addr().Interface(), append(getPrefixForStruct(prefixes, &fieldStruct), fmt.Sprint(i))...); err != nil {
 						return err
 					}
 				}
