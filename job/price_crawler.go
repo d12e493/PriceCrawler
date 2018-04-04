@@ -1,7 +1,7 @@
 package job
 
 import (
-	"product-query/crawler/pchome"
+	momo "product-query/crawler/momo"
 )
 
 type PriceCrawlerJob struct {
@@ -16,7 +16,8 @@ func (self *PriceCrawlerJob) BeforeProcess() {
 
 func (self *PriceCrawlerJob) Process(args []string) {
 
-	pchome.PageProcess()
+	momo.PageProcess()
+	// pchome.PageProcess()
 }
 
 func (self *PriceCrawlerJob) AfterProcess() {

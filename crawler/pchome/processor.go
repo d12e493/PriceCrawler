@@ -43,6 +43,9 @@ var productCountUrl string = "http://ecapi.pchome.com.tw/ecshop/prodapi/v2/store
 var productDetailUrl string = "http://ecapi.pchome.com.tw/ecshop/prodapi/v2/store/${subMenu}/prod&offset=1&limit=${count}&fields=Id,Nick,Pic,Price,Discount,isSpec,Name,isCarrier,isSnapUp,isBigCart&_callback=jsonp_prodlist"
 
 func PageProcess() {
+
+	Logger.Debug("Pchome page process start")
+
 	categorys := []string{"daily", "food", "life", "outdoor", "beauty", "vogue", "3c", "cp", "nb", "mobile", "digi", "ce"}
 
 	var menuUrl string = "http://ecapi.pchome.com.tw/cdn/ecshop/cateapi/v1.5/region&sign=h24%252F${category}&_callback=cb_ecshopCategoryRegion&25374809"
@@ -80,6 +83,8 @@ func PageProcess() {
 		}
 	}
 	productWorkerService.Wait()
+
+	Logger.Debug("Pchome page process finish")
 }
 
 // For Test
