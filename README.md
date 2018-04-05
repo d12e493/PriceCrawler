@@ -36,11 +36,16 @@ cd ~/go/src/product-query
 go get -u github.com/kardianos/govendor
 govendor sync
 </pre>
-2. develop api
+2. init database 
+<pre>
+create database name "demo"
+execute db/init.sql
+</pre>
+3. develop api
 <pre>
 go run main/api.go --config-path config/config.json --log-config-path config/logger.json
 </pre>
-3. develop batch job
+4. develop batch job
 <pre>
 go run main/batch.go --job-name priceCrawler --config-path config/config.json --log-config-path config/logger.json
 </pre>

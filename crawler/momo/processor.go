@@ -24,7 +24,7 @@ func PageProcess() {
 	LgrpCategoryUrlSlice := make([]string, 0)
 
 	LgrpCategories := getDocumentFromUrl(momoMainPage, "div.subMenu li.BTDME a")
-	for i, LgrpCategoy := range LgrpCategories {
+	for _, LgrpCategoy := range LgrpCategories {
 		if LgrpCategoy != nil {
 			href, _ := LgrpCategoy.Attr("href")
 			if strings.Contains(href, "LgrpCategory.jsp") {
