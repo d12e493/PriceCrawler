@@ -20,6 +20,11 @@ type Job interface {
 var jobName string = Arguments.JobName
 
 func init() {
+
+	if logFile, err := CreateLogFile("batch"); err == nil {
+		log.SetOutput(logFile)
+	}
+
 	if jobName == "" {
 		panic("no jobname arguments")
 	}

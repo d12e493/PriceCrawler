@@ -19,31 +19,18 @@ var Logger *log.Logger = log.New()
 var logConfig logConfigStruct = logConfigStruct{}
 var logFilePointer *os.File = nil
 
-func ReloadLogConfig() {
+func init() {
 
 	var configPath = Arguments.LogConfigPath
 
 	if err := configor.Load(&logConfig, configPath); err != nil {
 		panic(err)
 	}
-	reloadDefaultLogger()
-}
 
-func reloadDefaultLogger() {
 	if logLevel, err := log.ParseLevel(logConfig.LogLevel); err == nil {
 		Logger.SetLevel(logLevel)
 	} else {
 		panic(err)
-	}
-
-	if oneLogFilePointer, err := CreateLogFile("default"); err == nil {
-		Logger.Out = oneLogFilePointer
-		if logFilePointer != nil {
-			logFilePointer.Close()
-		}
-		logFilePointer = oneLogFilePointer
-	} else {
-		Logger.Info("Failed to log to file, using default stderr")
 	}
 }
 

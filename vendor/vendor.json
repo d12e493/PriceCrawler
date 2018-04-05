@@ -3,6 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
+			"path": "appengine/cloudsql",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "Pc2ORQp+VY3Un/dkh4QwLC7R6lE=",
 			"path": "github.com/BurntSushi/toml",
 			"revision": "a368813c5e648fee92e5f6c30e3944ff9d5e8895",
@@ -51,6 +55,12 @@
 			"versionExact": "v1.2"
 		},
 		{
+			"checksumSHA1": "K6icEVf2CuBzhLm/MGpRd1btshM=",
+			"path": "github.com/go-sql-driver/mysql",
+			"revision": "1a676ac6e4dce68e9303a1800773861350374a9e",
+			"revisionTime": "2018-03-08T10:03:10Z"
+		},
+		{
 			"checksumSHA1": "WX1+2gktHcBmE9MGwFSGs7oqexU=",
 			"path": "github.com/golang/protobuf/proto",
 			"revision": "e09c5db296004fbe3f74490e84dcd62c3c5ddb1b",
@@ -67,6 +77,12 @@
 			"path": "github.com/jinzhu/configor",
 			"revision": "ec34f328956f53dfbd06e9f5306e37e6943443c3",
 			"revisionTime": "2018-03-08T03:45:38Z"
+		},
+		{
+			"checksumSHA1": "atFTH73uH2FkPpqock5dEp5PL08=",
+			"path": "github.com/jinzhu/copier",
+			"revision": "7e38e58719c33e0d44d585c4ab477a30f8cb82dd",
+			"revisionTime": "2018-03-08T03:41:24Z"
 		},
 		{
 			"checksumSHA1": "lYUMiQOLvV+Okxcm1RQnot+c0ho=",
@@ -127,6 +143,42 @@
 			"path": "golang.org/x/sys/windows",
 			"revision": "fcb792cfc275f85145c640d36af94b591eed4275",
 			"revisionTime": "2018-04-04T15:22:34Z"
+		},
+		{
+			"checksumSHA1": "Mr4ur60bgQJnQFfJY0dGtwWwMPE=",
+			"path": "golang.org/x/text/encoding",
+			"revision": "2cb43934f0eece38629746959acc633cba083fe4",
+			"revisionTime": "2018-03-27T13:30:03Z"
+		},
+		{
+			"checksumSHA1": "zeHyHebIZl1tGuwGllIhjfci+wI=",
+			"path": "golang.org/x/text/encoding/internal",
+			"revision": "2cb43934f0eece38629746959acc633cba083fe4",
+			"revisionTime": "2018-03-27T13:30:03Z"
+		},
+		{
+			"checksumSHA1": "7kYqxy64WhMjFIFZgN7tJ3lbKxM=",
+			"path": "golang.org/x/text/encoding/internal/identifier",
+			"revision": "2cb43934f0eece38629746959acc633cba083fe4",
+			"revisionTime": "2018-03-27T13:30:03Z"
+		},
+		{
+			"checksumSHA1": "D+VI4j0Wjzr8SeupWdOB5KBdFOw=",
+			"path": "golang.org/x/text/encoding/traditionalchinese",
+			"revision": "2cb43934f0eece38629746959acc633cba083fe4",
+			"revisionTime": "2018-03-27T13:30:03Z"
+		},
+		{
+			"checksumSHA1": "ziMb9+ANGRJSSIuxYdRbA+cDRBQ=",
+			"path": "golang.org/x/text/transform",
+			"revision": "2cb43934f0eece38629746959acc633cba083fe4",
+			"revisionTime": "2018-03-27T13:30:03Z"
+		},
+		{
+			"checksumSHA1": "LiyXfqOzaeQ8vgYZH3t2hUEdVTw=",
+			"path": "google.golang.org/appengine/cloudsql",
+			"revision": "ad39d7fab7c60b2493fdc318c3d2cdb2128f92a4",
+			"revisionTime": "2018-03-29T18:26:30Z"
 		},
 		{
 			"checksumSHA1": "P/k5ZGf0lEBgpKgkwy++F7K1PSg=",

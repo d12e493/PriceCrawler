@@ -1,10 +1,14 @@
 package crawler
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"golang.org/x/text/encoding/traditionalchinese"
+	"golang.org/x/text/transform"
 )
 
 func GetResponse(url string) string {
@@ -33,4 +37,13 @@ func GetResponse(url string) string {
 	}
 
 	return ""
+}
+func Decodebig5(s []byte) ([]byte, error) {
+	I := bytes.NewReader(s)
+	O := transform.NewReader(I, traditionalchinese.Big5.NewDecoder())
+	d, e := ioutil.ReadAll(O)
+	if e != nil {
+		return nil, e
+	}
+	return d, nil
 }

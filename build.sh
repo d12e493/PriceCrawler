@@ -22,8 +22,8 @@ else
     ln -fs ${SCRIPT_FOLDER} ${SCRIPT_FOLDER}/src/${PACKAGE_NAME} && \
     rm -f ${SCRIPT_FOLDER}/bin/* && \
     mkdir -p ${SCRIPT_FOLDER}/bin && \
-    GOPATH=${SCRIPT_FOLDER} CGO_ENABLED=0 GOOS=${ARGS_GOOS} GOARCH=${ARGS_GOARCH} go build -o ${SCRIPT_FOLDER}/bin/api.o ${SCRIPT_FOLDER}/src/${PACKAGE_NAME}/main/api.go && \
-    GOPATH=${SCRIPT_FOLDER} CGO_ENABLED=0 GOOS=${ARGS_GOOS} GOARCH=${ARGS_GOARCH} go build -o ${SCRIPT_FOLDER}/bin/batch.o ${SCRIPT_FOLDER}/src/${PACKAGE_NAME}/main/batch.go && \
+    CGO_ENABLED=0 GOOS=${ARGS_GOOS} GOARCH=${ARGS_GOARCH} go build -o ${SCRIPT_FOLDER}/bin/api.o ${SCRIPT_FOLDER}/main/api.go && \
+    CGO_ENABLED=0 GOOS=${ARGS_GOOS} GOARCH=${ARGS_GOARCH} go build -o ${SCRIPT_FOLDER}/bin/batch.o ${SCRIPT_FOLDER}/main/batch.go && \
     rm -rf ${SCRIPT_FOLDER}/src
 fi
 

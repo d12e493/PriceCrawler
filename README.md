@@ -173,3 +173,4 @@ sh script/priceCrawler.sh
 2. Modulize service and dao for project.
 3. Optimize price crawler and cache some fixed value (like category,item...)
 4. Monitor api server status and get metrics.
+5. Need more analysis for each website and path rule.
