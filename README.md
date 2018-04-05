@@ -23,6 +23,9 @@ Due to time considerations , I implement the system by the architecture of POC.
 <img src="doc/schema_and_worker_pool.png" alt="Schema and Worker Pool" width="200">
 </img>
 3. Implement for POC
+<br/>
+<img src="doc/POC.png" alt="POC" width="200">
+</img>
 
 ## How to Develop
 <pre>
