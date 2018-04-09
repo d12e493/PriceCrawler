@@ -76,9 +76,10 @@ sh script/priceCrawler.sh
             <td>GET</td>
             <td>
             http://${Host}/v1/product?product_id={id}
+            <br/>
             http://${Host}/v1/product?product_name=${name}&page=${page}&size=${size}
             </td>
-            <td>Get data information
+            <td>Get data information<br/>
             page：start from 1 ... N
             size：items of each page
             </td>

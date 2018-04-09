@@ -26,11 +26,26 @@ func FindProduct(context *gin.Context) {
 
 			if p.ProductId != 0 {
 				bo := model.GetProductBO(p)
-				context.JSON(http.StatusBadRequest, bo)
+				context.JSON(http.StatusOK, bo)
 			}
 		}
 	} else {
-		// todo other query condition
+		// other query condition
+		productName := context.Query("product_name")
+		pageable := bo.ParseContextToPage(context)
+
+		products := &[]model.Product{}
+
+		var dao = dao.GetMysqlDao()
+		if len(productName) > 0 {
+			dao = dao.Where("name LIKE ?", "%"+productName+"%")
+			Logger.Debug("Query product name : " + productName)
+		}
+		Logger.Debug("Query pageable")
+		Logger.Debug(pageable)
+		dao.Limit(pageable.Size).Offset((pageable.Page - 1) * pageable.Size).Find(&products)
+
+		context.JSON(http.StatusOK, products)
 	}
 }
 
