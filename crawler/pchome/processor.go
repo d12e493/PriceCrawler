@@ -89,11 +89,11 @@ func PageProcess() {
 
 // For Test
 // PageProcess
-// func PageProcess() {
-// 	productWorkerService := service.CreateWorkerService(10, productWorker)
-// 	getProductCountAndDetail("DAAG66", productWorkerService)
-// 	productWorkerService.Wait()
-// }
+func PageProcessTest() {
+	productWorkerService := service.CreateWorkerService(10, productWorker)
+	getProductCountAndDetail("DAAG66", productWorkerService)
+	productWorkerService.Wait()
+}
 
 func getProductCountAndDetail(subMenuId string, workService *service.WorkerService) {
 	var url string

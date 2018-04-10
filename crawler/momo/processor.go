@@ -68,11 +68,11 @@ func PageProcess() {
 }
 
 // for test
-// func PageProcess() {
-// 	productWorkerService := service.CreateWorkerService(10, productWorker)
-// 	productWorkerService.Submit("https://www.momoshop.com.tw/category/DgrpCategory.jsp?d_code=2701800171&p_orderType=1")
-// 	productWorkerService.Wait()
-// }
+func PageProcessTest() {
+	productWorkerService := service.CreateWorkerService(10, productWorker)
+	productWorkerService.Submit("https://www.momoshop.com.tw/category/DgrpCategory.jsp?d_code=2701800171&p_orderType=1")
+	productWorkerService.Wait()
+}
 
 func productWorker(value interface{}) {
 	DgrpCategoryUrl := value.(string)
